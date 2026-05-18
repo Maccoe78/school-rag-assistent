@@ -1,0 +1,38 @@
+Learning Platform Access
+
+Purpose
+This document explains how students access the online learning platform at Nova Tech College.
+
+General Rule
+Students receive access to the official learning platform after successful registration and account activation.
+
+Platform Use
+The learning platform may be used for:
+- course materials
+- assignment submission
+- deadlines
+- teacher announcements
+- feedback
+- learning activities
+
+Login Requirements
+Students must use their official school credentials to log in. Access may depend on active enrollment status.
+
+Access Problems
+If a student cannot access the learning platform, the student should first:
+- check login details
+- verify internet connection
+- confirm account activation status
+- review any maintenance messages
+
+If the issue continues, the student should contact the ICT helpdesk.
+
+Student Responsibility
+Students are expected to check the learning platform regularly and use it as an official source of course information.
+
+Contact
+Questions about platform access should be directed to the ICT helpdesk.
+
+Version
+Version 1.0
+Last updated: 2026-01-10

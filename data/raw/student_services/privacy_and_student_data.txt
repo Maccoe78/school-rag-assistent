@@ -1,0 +1,35 @@
+Privacy and Student Data
+
+Purpose
+This document explains how Nova Tech College handles student personal data.
+
+General Principle
+The school processes student data only for legitimate educational, administrative, and support-related purposes.
+
+Possible Data Use
+Student data may be used for:
+- registration and enrollment
+- communication
+- attendance and progress tracking
+- assessment administration
+- support and guidance processes
+- legal or institutional reporting obligations
+
+Data Protection
+The school takes reasonable measures to protect student information against unauthorized access, misuse, or loss.
+
+Limited Access
+Student data is only accessible to staff members who need it for their role.
+
+Student Rights
+Students may have the right to:
+- request information about their stored data
+- ask for correction of inaccurate information
+- raise concerns about data handling
+
+Contact
+Questions about privacy and student data should be directed to student administration or the privacy contact point.
+
+Version
+Version 1.0
+Last updated: 2026-01-10
