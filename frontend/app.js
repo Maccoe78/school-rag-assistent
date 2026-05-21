@@ -5,28 +5,35 @@ const quickQuestions = document.querySelectorAll(".quick-question");
 
 const API_BASE_URL = "http://127.0.0.1:8000";
 
+function scrollChatToBottom() {
+  requestAnimationFrame(() => {
+    chat.scrollTop = chat.scrollHeight;
+  });
+}
+
 function appendMessage(text, role, sources = []) {
   const row = document.createElement("div");
   row.className = role === "user" ? "flex justify-end" : "flex";
 
   const bubble = document.createElement("div");
-  bubble.className =
+  bubble.className =  
     role === "user"
-      ? "max-w-3xl rounded-2xl bg-cyan-500 px-4 py-3 text-sm leading-7 text-slate-950 shadow-lg"
-      : "max-w-3xl rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm leading-7 text-slate-200 shadow-lg";
+      ? "max-w-3xl rounded-2xl bg-gray-200 px-4 py-3 text-sm leading-7 text-black shadow-sm"
+      : "max-w-3xl rounded-2xl bg-[#6f3b6f] px-4 py-3 text-sm leading-7 text-white shadow-sm";
 
   bubble.textContent = text;
   row.appendChild(bubble);
 
   if (role === "bot" && sources.length > 0) {
     const sourceBlock = document.createElement("div");
-    sourceBlock.className = "mt-3 text-xs text-slate-400";
+    sourceBlock.className = "mt-3 text-xs text-slate-200";
     sourceBlock.textContent = `Sources: ${sources.join(", ")}`;
     bubble.appendChild(sourceBlock);
   }
 
-  chat.appendChild(row);
-  chat.scrollTop = chat.scrollHeight;
+  const wrapper = chat.firstElementChild || chat;
+  wrapper.appendChild(row);
+  scrollChatToBottom();
 }
 
 function addThinkingMessage() {
@@ -36,17 +43,20 @@ function addThinkingMessage() {
 
   const bubble = document.createElement("div");
   bubble.className =
-    "max-w-3xl rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-slate-400 shadow-lg";
-  bubble.textContent = "Nova Assistant is thinking...";
+    "max-w-3xl rounded-2xl bg-[#6f3b6f] px-4 py-3 text-sm text-slate-100 shadow-sm";
+  bubble.textContent = "Fontys ICT Assistent is thinking...";
 
   row.appendChild(bubble);
-  chat.appendChild(row);
-  chat.scrollTop = chat.scrollHeight;
+
+  const wrapper = chat.firstElementChild || chat;
+  wrapper.appendChild(row);
+  scrollChatToBottom();
 }
 
 function removeThinkingMessage() {
   const thinking = document.getElementById("thinking-row");
   if (thinking) thinking.remove();
+  scrollChatToBottom();
 }
 
 async function askQuestion(question) {
@@ -89,10 +99,16 @@ form.addEventListener("submit", async (event) => {
 
   input.value = "";
   await askQuestion(question);
+  input.focus();
 });
 
 quickQuestions.forEach((button) => {
   button.addEventListener("click", async () => {
     await askQuestion(button.textContent.trim());
+    input.focus();
   });
+});
+
+window.addEventListener("load", () => {
+  scrollChatToBottom();
 });
