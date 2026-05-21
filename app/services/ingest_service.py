@@ -5,6 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import SentenceTransformerEmbeddings
+from langchain_community.document_loaders import PyPDFLoader
 
 from app.core.config import (
     DATA_DIR,
@@ -14,25 +15,45 @@ from app.core.config import (
 )
 
 
-def load_txt_documents(data_dir: Path) -> List[Document]:
+def load_documents(data_dir: Path) -> List[Document]:
     documents = []
 
-    for file_path in data_dir.rglob("*.txt"):
-        text = file_path.read_text(encoding="utf-8")
+    for file_path in data_dir.rglob("*"):
+        if file_path.suffix.lower() == ".txt":
+            text = file_path.read_text(encoding="utf-8")
 
-        category = file_path.parent.name
-        filename = file_path.name
-        relative_path = str(file_path.relative_to(data_dir.parent.parent))
+            category = file_path.parent.name
+            filename = file_path.name
+            relative_path = str(file_path.relative_to(data_dir.parent.parent))
 
-        doc = Document(
-            page_content=text,
-            metadata={
-                "source": relative_path,
-                "category": category,
-                "filename": filename,
-            },
-        )
-        documents.append(doc)
+            doc = Document(
+                page_content=text,
+                metadata={
+                    "source": relative_path,
+                    "category": category,
+                    "filename": filename,
+                },
+            )
+            documents.append(doc)
+
+        elif file_path.suffix.lower() == ".pdf":
+            loader = PyPDFLoader(str(file_path))
+            pdf_docs = loader.load()
+
+            category = file_path.parent.name
+            filename = file_path.name
+            relative_path = str(file_path.relative_to(data_dir.parent.parent))
+
+            for doc in pdf_docs:
+                doc.metadata.update(
+                    {
+                        "source": relative_path,
+                        "category": category,
+                        "filename": filename,
+                    }
+                )
+
+            documents.extend(pdf_docs)
 
     return documents
 
@@ -62,8 +83,12 @@ def build_vectorstore(chunks: List[Document]) -> Chroma:
 
 def ingest_documents() -> None:
     print("Loading documents...")
-    documents = load_txt_documents(DATA_DIR)
+    documents = load_documents(DATA_DIR)
     print(f"Loaded {len(documents)} documents.")
+
+    if documents:
+        print("First document preview:")
+        print(repr(documents[0].page_content[:500]))
 
     print("Splitting documents into chunks...")
     chunks = split_documents(documents)
