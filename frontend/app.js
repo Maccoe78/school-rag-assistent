@@ -66,7 +66,22 @@ function clearChatUI() {
   appendWelcomeMessage();
 }
 
-function appendMessage(text, role, sources = []) {
+function typeText(element, text, speed, onDone) {
+  let i = 0;
+  function tick() {
+    if (i < text.length) {
+      element.textContent += text[i];
+      i++;
+      scrollChatToBottom();
+      setTimeout(tick, speed);
+    } else if (onDone) {
+      onDone();
+    }
+  }
+  tick();
+}
+
+function appendMessage(text, role, sources = [], animate = false) {
   const row = document.createElement("div");
   row.className = role === "user" ? "flex justify-end" : "flex";
 
@@ -76,19 +91,29 @@ function appendMessage(text, role, sources = []) {
       ? "max-w-3xl rounded-2xl bg-gray-200 px-4 py-3 text-sm leading-7 text-black shadow-sm"
       : "max-w-3xl rounded-2xl bg-[#6f3b6f] px-4 py-3 text-sm leading-7 text-white shadow-sm";
 
-  bubble.textContent = text;
   row.appendChild(bubble);
+  chat.firstElementChild.appendChild(row);
 
-  if (role === "bot" && sources.length > 0) {
-    const sourceBlock = document.createElement("div");
-    sourceBlock.className = "mt-3 text-xs text-slate-200";
-    sourceBlock.textContent = `Sources: ${sources.join(", ")}`;
-    bubble.appendChild(sourceBlock);
+  if (role === "bot" && animate) {
+    typeText(bubble, text, 12, () => {
+      if (sources.length > 0) {
+        const sourceBlock = document.createElement("div");
+        sourceBlock.className = "mt-3 text-xs text-slate-200";
+        sourceBlock.textContent = `Sources: ${sources.join(", ")}`;
+        bubble.appendChild(sourceBlock);
+        scrollChatToBottom();
+      }
+    });
+  } else {
+    bubble.textContent = text;
+    if (role === "bot" && sources.length > 0) {
+      const sourceBlock = document.createElement("div");
+      sourceBlock.className = "mt-3 text-xs text-slate-200";
+      sourceBlock.textContent = `Sources: ${sources.join(", ")}`;
+      bubble.appendChild(sourceBlock);
+    }
+    scrollChatToBottom();
   }
-
-  const wrapper = chat.firstElementChild;
-  wrapper.appendChild(row);
-  scrollChatToBottom();
 }
 
 function addThinkingMessage() {
@@ -193,7 +218,7 @@ async function askQuestion(question) {
       return;
     }
 
-    appendMessage(data.answer, "bot", data.sources || []);
+    appendMessage(data.answer, "bot", data.sources || [], true);
 
     chatHistory.push({ role: "user", content: question });
     chatHistory.push({ role: "assistant", content: data.answer, sources: data.sources || [] });
