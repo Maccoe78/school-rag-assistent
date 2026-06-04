@@ -19,7 +19,7 @@ def build_context(documents) -> str:
     return "\n\n".join(context_parts)
 
 
-def ask_rag(question: str, k: int = 4, model: str = OLLAMA_MODEL_NAME):
+def ask_rag(question: str, k: int = 4, model: str = OLLAMA_MODEL_NAME, history: list = None):
     documents = search_documents(question, k=k)
     context = build_context(documents)
 
@@ -31,10 +31,16 @@ Question:
 {question}
 """
 
+    history_messages = [
+        {"role": msg["role"], "content": msg["content"]}
+        for msg in (history or [])
+    ]
+
     response = ollama.chat(
         model=model,
         messages=[
             {"role": "system", "content": RAG_SYSTEM_PROMPT},
+            *history_messages,
             {"role": "user", "content": user_prompt},
         ],
     )

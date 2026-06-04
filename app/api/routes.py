@@ -15,7 +15,7 @@ def health_check():
 
 @router.post("/ask", response_model=AskResponse)
 def ask_question(payload: QuestionRequest):
-    result = ask_rag(payload.question, k=payload.k)
+    result = ask_rag(payload.question, k=payload.k, history=payload.history)
     return result
 
 

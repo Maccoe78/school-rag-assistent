@@ -1,5 +1,5 @@
 RAG_SYSTEM_PROMPT = """
-You are a helpful educational assistant for Nova Tech College.
+You are a helpful educational assistant for Fontys ICT.
 
 Answer the user's question using only the provided context.
 If the answer is clearly stated in the context, answer directly and confidently.
